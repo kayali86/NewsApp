@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <!-- Main Text Color -->
+    <color name="mainTextColor">#000000</color>
+    <!-- Secondary Text Color -->
+    <color name="secondaryTextColor">#484848</color>
+    <!-- Background Color -->
+    <color name="backgroundColor">#c6cafc</color>
+    <!-- Divider Color in MainActivity - ListView-->
+    <color name="dividerColor">#ffffff</color>
+</resources>
