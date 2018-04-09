@@ -44,8 +44,22 @@ public class QueryUtils {
                 String storySection = currentStory.getString("sectionName");
                 String storyUrl = currentStory.getString("webUrl");
                 String publicationDate = currentStory.getString("webPublicationDate");
+                // Get the authors from references JSONArray if available
+                JSONArray referencesArray = currentStory.getJSONArray("references");
+                String author = "My Author";
+                if (referencesArray.length() == 0) {
+                    author = null;
+                } else {
+                    StringBuilder builder = new StringBuilder();
+                    for (int j = 0; j < referencesArray.length(); j++) {
+                        JSONObject newAuthor = referencesArray.getJSONObject(j);
+                        builder.append(newAuthor);
+                        builder.append(", ");
+                        author = builder.toString();
+                    }
+                }
                 // Declare a Story Object with the new retrieved data
-                Story story = new Story(storyTitle, storySection, storyUrl, publicationDate);
+                Story story = new Story(storyTitle, storySection, storyUrl, author, publicationDate);
                 // Add the new Story Object to the list of stories.
                 stories.add(story);
             }

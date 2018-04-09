@@ -5,7 +5,7 @@
     android:background="@color/backgroundColor"
     android:minHeight="96dp"
     android:orientation="horizontal"
-    android:padding="8dp">
+    android:padding="@dimen/main_padding">
 
     <ImageView
         android:id="@+id/section_image"
@@ -18,7 +18,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="@dimen/main_padding"
         android:layout_weight="1"
         android:orientation="vertical">
 
@@ -38,6 +38,14 @@
             android:ellipsize="end"
             android:textColor="@color/secondaryTextColor"
             tools:text="Sport" />
+
+        <TextView
+            android:id="@+id/author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:textColor="@color/secondaryTextColor"
+            tools:text="An Author" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -59,7 +67,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="@dimen/text_views_separating"
                 android:textColor="@color/secondaryTextColor"
                 android:textSize="12sp"
                 tools:text="Tue 21:42:14" />

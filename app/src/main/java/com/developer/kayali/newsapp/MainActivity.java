@@ -4,6 +4,8 @@ import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -13,6 +15,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final int STORY_LOADER_ID = 1;
     // Url to get the JSON response from the server
     private static final String REQUEST_URL =
-            "http://content.guardianapis.com/search?order-by=newest&page-size=50&api-key=5c70d9f0-f6a0-42bc-8487-99fde6b0ffbf";
+            "http://content.guardianapis.com/search?order-by=newest&show-references=author&page-size=50&api-key=5c70d9f0-f6a0-42bc-8487-99fde6b0ffbf";
     // Declaring an adapter for the list of Stories
     private StoryAdapter mAdapter;
     // A TextView to display when the list of stories is empty
@@ -69,7 +73,17 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 // Intent that uses Story Url to call view the story using web browser
                 Uri storyUri = Uri.parse(currentStory.getStoryUrl());
                 Intent storyIntent = new Intent(Intent.ACTION_VIEW, storyUri);
-                startActivity(storyIntent);
+                // Check if there is a browser on device to execute the intent
+                PackageManager packageManager = getPackageManager();
+                List<ResolveInfo> activities = packageManager.queryIntentActivities(storyIntent,
+                        PackageManager.MATCH_DEFAULT_ONLY);
+                boolean isIntentSafe = activities.size() > 0;
+                if(isIntentSafe){
+                    startActivity(storyIntent);
+                } else{
+                    Toast.makeText(MainActivity.this, getString(R.string.no_browser), Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
     }

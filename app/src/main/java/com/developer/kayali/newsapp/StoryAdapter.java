@@ -41,6 +41,12 @@ public class StoryAdapter extends ArrayAdapter<Story> {
         // Initialize a TextView to display Story section
         TextView storySectionView = (TextView) listItemView.findViewById(R.id.section);
         storySectionView.setText(currentStory.getStorySection());
+        // Initialize a TextView to display Story Author
+        TextView storyAuthorView = (TextView) listItemView.findViewById(R.id.author);
+        if (currentStory.getAuthor() == null){
+            storyAuthorView.setVisibility(View.GONE);
+        }
+        storyAuthorView.setText(currentStory.getAuthor());
         // Initialize a TextView to display Story publication date with the correct format using formattedDate method
         TextView dateView = listItemView.findViewById(R.id.date);
         String formattedDate = formatDate(currentStory.getPublicationDate());
