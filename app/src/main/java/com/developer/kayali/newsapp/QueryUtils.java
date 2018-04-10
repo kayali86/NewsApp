@@ -19,6 +19,14 @@ import java.util.List;
 public class QueryUtils {
     // Declare a Log tag that will be used with Log messages and Exceptions
     private static final String LOG_TAG = QueryUtils.class.getName();
+    // String constants to store the response key values
+    private static final String RESPONSE = "response";
+    private static final String RESULTS = "results";
+    private static final String WEB_TITLE = "webTitle";
+    private static final String SECTION_NAME = "sectionName";
+    private static final String WEB_URL = "webUrl";
+    private static final String WEB_PUBLICATION_DATE = "webPublicationDate";
+    private static final String TAGS = "tags";
 
     // Constructor
     private QueryUtils() {
@@ -35,26 +43,27 @@ public class QueryUtils {
         // Fetching stories data from the JSON response
         try {
             JSONObject baseJsonResponse = new JSONObject(storyJSON);
-            JSONObject response = baseJsonResponse.getJSONObject("response");
-            JSONArray storyArray = response.getJSONArray("results");
+            JSONObject response = baseJsonResponse.getJSONObject(RESPONSE);
+            JSONArray storyArray = response.getJSONArray(RESULTS);
             // For loop to create a Story Objects to store it in stories ArrayList
             for (int i = 0; i < storyArray.length(); i++) {
                 JSONObject currentStory = storyArray.getJSONObject(i);
-                String storyTitle = currentStory.getString("webTitle");
-                String storySection = currentStory.getString("sectionName");
-                String storyUrl = currentStory.getString("webUrl");
-                String publicationDate = currentStory.getString("webPublicationDate");
-                // Get the authors from references JSONArray if available
-                JSONArray referencesArray = currentStory.getJSONArray("references");
-                String author = "My Author";
-                if (referencesArray.length() == 0) {
+                String storyTitle = currentStory.getString(WEB_TITLE);
+                String storySection = currentStory.getString(SECTION_NAME);
+                String storyUrl = currentStory.getString(WEB_URL);
+                String publicationDate = currentStory.getString(WEB_PUBLICATION_DATE);
+                // Get the authors from tags JSONArray if available
+                JSONArray tagsArray = currentStory.getJSONArray(TAGS);
+                String author = "";
+                if (tagsArray.length() == 0) {
                     author = null;
                 } else {
                     StringBuilder builder = new StringBuilder();
-                    for (int j = 0; j < referencesArray.length(); j++) {
-                        JSONObject newAuthor = referencesArray.getJSONObject(j);
+                    for (int j = 0; j < tagsArray.length(); j++) {
+                        JSONObject tagsObject = tagsArray.getJSONObject(j);
+                        String newAuthor = tagsObject.getString(WEB_TITLE);
                         builder.append(newAuthor);
-                        builder.append(", ");
+                        builder.append(". ");
                         author = builder.toString();
                     }
                 }

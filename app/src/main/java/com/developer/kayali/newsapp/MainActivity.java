@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final int STORY_LOADER_ID = 1;
     // Url to get the JSON response from the server
     private static final String REQUEST_URL =
-            "http://content.guardianapis.com/search?order-by=newest&show-references=author&page-size=50&api-key=5c70d9f0-f6a0-42bc-8487-99fde6b0ffbf";
+            "http://content.guardianapis.com/search?order-by=newest&show-tags=contributor&page-size=50&api-key=5c70d9f0-f6a0-42bc-8487-99fde6b0ffbf";
     // Declaring an adapter for the list of Stories
     private StoryAdapter mAdapter;
     // A TextView to display when the list of stories is empty
