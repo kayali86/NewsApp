@@ -101,12 +101,15 @@ public class StoryAdapter extends ArrayAdapter<Story> {
                 sectionImageResourceID = R.drawable.us_news;
                 break;
             case "Business":
+            case "Money":
                 sectionImageResourceID = R.drawable.business;
                 break;
             case "World news":
+            case "Global":
                 sectionImageResourceID = R.drawable.world;
                 break;
             case "News":
+            case "From the Guardian":
                 sectionImageResourceID = R.drawable.news;
                 break;
             case "Technology":
@@ -141,6 +144,15 @@ public class StoryAdapter extends ArrayAdapter<Story> {
                 break;
             case "Science":
                 sectionImageResourceID = R.drawable.science;
+                break;
+            case "Crosswords":
+                sectionImageResourceID = R.drawable.crosswords;
+                break;
+            case "Life and style":
+                sectionImageResourceID = R.drawable.lifestyle;
+                break;
+            case "Television & radio":
+                sectionImageResourceID = R.drawable.tv_radio;
                 break;
             default:
                 sectionImageResourceID = R.drawable.blank;

@@ -4,19 +4,22 @@ import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final int STORY_LOADER_ID = 1;
     // Url to get the JSON response from the server
     private static final String REQUEST_URL =
-            "http://content.guardianapis.com/search?order-by=newest&show-tags=contributor&page-size=50&api-key=5c70d9f0-f6a0-42bc-8487-99fde6b0ffbf";
+            "http://content.guardianapis.com/search";
     // Declaring an adapter for the list of Stories
     private StoryAdapter mAdapter;
     // A TextView to display when the list of stories is empty
@@ -36,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         // EmptyTextView initializing
         mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
         // Declaring a listView to display stories
@@ -78,22 +80,39 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 List<ResolveInfo> activities = packageManager.queryIntentActivities(storyIntent,
                         PackageManager.MATCH_DEFAULT_ONLY);
                 boolean isIntentSafe = activities.size() > 0;
-                if(isIntentSafe){
+                if (isIntentSafe) {
                     startActivity(storyIntent);
-                } else{
+                } else {
                     Toast.makeText(MainActivity.this, getString(R.string.no_browser), Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
     }
-
     // Create a new loader
     @Override
     public Loader<List<Story>> onCreateLoader(int id, Bundle args) {
-        return new StoryLoader(this, REQUEST_URL);
-    }
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        // getString retrieves a String value from the preferences. The second parameter is the default value for this preference.
+        String pageSize = sharedPrefs.getString(
+                getString(R.string.settings_page_size_key),
+                getString(R.string.settings_page_size_default));
+        String orderBy = sharedPrefs.getString(
+                getString(R.string.settings_order_by_key),
+                getString(R.string.settings_order_by_default));
 
+        // parse breaks apart the URI string that's passed into its parameter
+        Uri baseUri = Uri.parse(REQUEST_URL);
+        // buildUpon prepares the baseUri that we just parsed so we can add query parameters to it
+        Uri.Builder uriBuilder = baseUri.buildUpon();
+        // Append query parameter and its value. For example, the `format=geojson`
+        uriBuilder.appendQueryParameter("order-by", orderBy);
+        uriBuilder.appendQueryParameter("show-tags", "contributor");
+        uriBuilder.appendQueryParameter("page-size", pageSize);
+        uriBuilder.appendQueryParameter("api-key", "5c70d9f0-f6a0-42bc-8487-99fde6b0ffbf");
+        // Return the completed uri `http://earthquake.usgs.gov/fdsnws/event/1/query?format=
+        // geojson&limit=10&minmag=minMagnitude&orderby=time
+        return new StoryLoader(this, uriBuilder.toString());
+    }
     // When loader in done
     @Override
     public void onLoadFinished(Loader<List<Story>> loader, List<Story> stories) {
@@ -109,11 +128,28 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             mAdapter.addAll(stories);
         }
     }
-
     // When the activity is closed or When the Loader interrupted
     @Override
     public void onLoaderReset(Loader<List<Story>> loader) {
         // Loader reset, so we can clear out our existing data.
         mAdapter.clear();
+    }
+    @Override
+    // Inflate the menu Layout
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the Options Menu we specified in XML
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+    @Override
+    // If an option from menu selected
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        // Open Settings Activity when settings option selected
+        if (id == R.id.action_settings) {
+            Intent settingsIntent = new Intent(this, SettingsActivity.class);
+            startActivity(settingsIntent);
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
